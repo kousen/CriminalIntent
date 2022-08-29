@@ -2,7 +2,6 @@
 SkillDevelopers
 August 2022
 
-
 Ken Kousen
 ken.kousen@kousenit.com
 http://www.kousenit.com
@@ -10,93 +9,62 @@ https://kousenit.org (blog)
 https://kenkousen.substack.com (newsletter, Tales from the jar side)
 @kenkousen (twitter)
 
+Link to Google document (full):
+https://docs.google.com/document/d/1TQWWLxoUiKm5C7YuxM8TbrVhPC3CuhkGX_Qf1sA3ffE/edit?usp=sharing
 
-Link to this document (full):
-https://docs.google.com/document/d/1TQWWLxoUiKm5C7YuxM8TbrVhPC3CuhkGX_Qf1sA3ffE/edit?usp=sharing 
-
-
-Link to this document (shortened):
+Link to Google document (shortened):
 https://tinyurl.com/yc3779rn 
 Note: Anyone with the link can view this document
-
-
-
 
 Book: Android Programming: The Big Nerd Ranch Guide, 5th Edition
 Solutions to 5th Edition:
 https://www.bignerdranch.com/android-5e-solutions
 
-
 Solutions to 4th Edition:
 https://www.bignerdranch.com/solutions/AndroidProgramming4e.zip
-
 
 "Official" Android slides and labs from Google:
 https://developer.android.com/teach
 
-
 Download of Jeff's copy of the book:
 https://labs.skilldevelopers.com/androidbook/
-
-
-
-
-Testing
-Unit testing → test a component (usually a class) in isolation
-"Integration" testing → test multiple components together
-"Functional" or "end-to-end" testing → drive the client (either an app or a browser) programmatically
-
-
-
 
 By far the most popular testing API in Java (and Kotlin) is JUnit
 Write automated tests that are very fast
 
-
 Our problem in Android is that almost everything requires a "instrumented" test
         → need an emulator or an external device
-
 
 JUnit is currently on version 5 (5.9.*)
 but Android only supports JUnit 4
 
 
 @Test
-    fun `iterate over map`() {
-        val map = mapOf("a" to 1, "b" to 2, "c" to 2)
-        // traditional for-in loop on entry
-        for (entry in map) {
-            println("${entry.key} maps to ${entry.value}")
-        }
-
-
-        // for-in loop on the destructured keys and values
-        for ((k,v) in map) {  // destructuring
-            println("$k maps to $v")
-        }
-        
-        // forEach method which takes a lambda
-        map.forEach { (k, v) -> println("$k maps to $v") }
+fun `iterate over map`() {
+    val map = mapOf("a" to 1, "b" to 2, "c" to 2)
+    // traditional for-in loop on entry
+    for (entry in map) {
+        println("${entry.key} maps to ${entry.value}")
     }
 
-
-
+    // for-in loop on the destructured keys and values
+    for ((k,v) in map) {  // destructuring
+        println("$k maps to $v")
+    }
+        
+    // forEach method which takes a lambda
+    map.forEach { (k, v) -> println("$k maps to $v") }
+}
 
 To run all the tests (Espresso and otherwise)
 > ./gradlew connectedCheck
 
-
 The output of the tests will be under
 app/build/reports/androidTests/connected/index.html
 
-
-
-
 Espresso test for our CrimeDetailFragment:
 
-
 package com.bignerdranch.android.criminalintent
-
 
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.Espresso.onView
@@ -111,13 +79,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @RunWith(AndroidJUnit4::class)
 class CrimeDetailFragmentTest {
 
-
     private lateinit var scenario: FragmentScenario<CrimeDetailFragment>
-
 
     @Before
     fun setUp() {
@@ -125,12 +90,10 @@ class CrimeDetailFragmentTest {
 FragmentScenario.launchInContainer(CrimeDetailFragment::class.java)
     }
 
-
     @After
     fun tearDown() {
         scenario.close()
     }
-
 
     @Test
     fun checkCrimeFromInputFields() {
@@ -144,7 +107,6 @@ FragmentScenario.launchInContainer(CrimeDetailFragment::class.java)
         }
     }
 }
-
 
 To access a database in an app on an emulator
 1. Switch the adb command to root access
@@ -163,7 +125,6 @@ To access a database in an app on an emulator
 
 Additional GitHub repositories:
 - https://github.com/kousen/MyViewModelDemo
-
 
 
 Project points:
