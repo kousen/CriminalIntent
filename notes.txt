@@ -1,0 +1,204 @@
+﻿Android Development for Fidelity
+SkillDevelopers
+August 2022
+
+
+Ken Kousen
+ken.kousen@kousenit.com
+http://www.kousenit.com
+https://kousenit.org (blog)
+https://kenkousen.substack.com (newsletter, Tales from the jar side)
+@kenkousen (twitter)
+
+
+Link to this document (full):
+https://docs.google.com/document/d/1TQWWLxoUiKm5C7YuxM8TbrVhPC3CuhkGX_Qf1sA3ffE/edit?usp=sharing 
+
+
+Link to this document (shortened):
+https://tinyurl.com/yc3779rn 
+Note: Anyone with the link can view this document
+
+
+
+
+Book: Android Programming: The Big Nerd Ranch Guide, 5th Edition
+Solutions to 5th Edition:
+https://www.bignerdranch.com/android-5e-solutions
+
+
+Solutions to 4th Edition:
+https://www.bignerdranch.com/solutions/AndroidProgramming4e.zip
+
+
+"Official" Android slides and labs from Google:
+https://developer.android.com/teach
+
+
+Download of Jeff's copy of the book:
+https://labs.skilldevelopers.com/androidbook/
+
+
+
+
+Testing
+Unit testing → test a component (usually a class) in isolation
+"Integration" testing → test multiple components together
+"Functional" or "end-to-end" testing → drive the client (either an app or a browser) programmatically
+
+
+
+
+By far the most popular testing API in Java (and Kotlin) is JUnit
+Write automated tests that are very fast
+
+
+Our problem in Android is that almost everything requires a "instrumented" test
+        → need an emulator or an external device
+
+
+JUnit is currently on version 5 (5.9.*)
+but Android only supports JUnit 4
+
+
+@Test
+    fun `iterate over map`() {
+        val map = mapOf("a" to 1, "b" to 2, "c" to 2)
+        // traditional for-in loop on entry
+        for (entry in map) {
+            println("${entry.key} maps to ${entry.value}")
+        }
+
+
+        // for-in loop on the destructured keys and values
+        for ((k,v) in map) {  // destructuring
+            println("$k maps to $v")
+        }
+        
+        // forEach method which takes a lambda
+        map.forEach { (k, v) -> println("$k maps to $v") }
+    }
+
+
+
+
+To run all the tests (Espresso and otherwise)
+> ./gradlew connectedCheck
+
+
+The output of the tests will be under
+app/build/reports/androidTests/connected/index.html
+
+
+
+
+Espresso test for our CrimeDetailFragment:
+
+
+package com.bignerdranch.android.criminalintent
+
+
+import androidx.fragment.app.testing.FragmentScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+
+
+@RunWith(AndroidJUnit4::class)
+class CrimeDetailFragmentTest {
+
+
+    private lateinit var scenario: FragmentScenario<CrimeDetailFragment>
+
+
+    @Before
+    fun setUp() {
+        scenario = 
+FragmentScenario.launchInContainer(CrimeDetailFragment::class.java)
+    }
+
+
+    @After
+    fun tearDown() {
+        scenario.close()
+    }
+
+
+    @Test
+    fun checkCrimeFromInputFields() {
+        onView(withId(R.id.crime_title))
+            .perform(typeText("Sample Crime"))
+        onView(withId(R.id.crime_solved))
+            .perform(click())
+        scenario.onFragment { fragment ->
+            assertEquals("Sample Crime", fragment.crime.title)
+            assertTrue(fragment.crime.isSolved)
+        }
+    }
+}
+
+
+To access a database in an app on an emulator
+1. Switch the adb command to root access
+> adb root
+2. Connect to emulator and open a Unix shell
+> adb shell
+3. Change directory to app
+> cd data/data/<application_id>/databases
+4. Run the sqlite3 command
+> sqlite3 <database_name>
+5. Use sqlite3 with "dot" commands
+> .tables
+> select * from <tablename>
+6. .exit to get out of the db client
+7. exit to get out of the shell
+
+
+
+
+
+
+
+
+
+
+
+
+Project points:
+   * One activity (if using fragments), or two or more if not
+   * One or more fragments
+   * An explicit intent
+   * Passing data using an intent
+   * An implicit intent
+   * Implement fragment navigation (via the Jetpack component)
+   * A menu with one or more items
+   * A toast
+   * A snackbar
+   * A regular (non-Espresso) test
+   * An Espresso test
+   * A recycler view
+   * A Room database
+   * Use suspend functions
+   * Launch a coroutine
+   * A networking connection to download data using Retrofit
+   * String resources in more than one locale
+   * A view binding
+   * Use data binding
+   * A ViewModel
+   * A constraint layout
+   * A vector graphic
+   * Use listeners properly for your widgets
+   * Log messages
+   * A separate layout for landscape mode
+   * LiveData or Flow
+   * Use Jetpack Compose
+   * Anything interesting not on this list
+   * One of the other students says you helped them
