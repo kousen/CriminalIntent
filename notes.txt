@@ -162,16 +162,6 @@ To access a database in an app on an emulator
 7. exit to get out of the shell
 
 
-
-
-
-
-
-
-
-
-
-
 Project points:
    * One activity (if using fragments), or two or more if not
    * One or more fragments
