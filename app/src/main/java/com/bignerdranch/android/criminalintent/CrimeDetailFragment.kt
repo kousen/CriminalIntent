@@ -1,15 +1,19 @@
 package com.bignerdranch.android.criminalintent
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.bignerdranch.android.criminalintent.databinding.FragmentCrimeDetailBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+
+private const val TAG = "CrimeDetailFragment"
 
 class CrimeDetailFragment : Fragment() {
 
@@ -18,6 +22,8 @@ class CrimeDetailFragment : Fragment() {
         get() = checkNotNull(_binding) {
             "Cannot access binding because it is null"
         }
+
+    private val args: CrimeDetailFragmentArgs by navArgs()
 
     private val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy 'at' hh:mm a")
 
@@ -32,6 +38,8 @@ class CrimeDetailFragment : Fragment() {
             date = LocalDateTime.now(),
             isSolved = false
         )
+
+        Log.d(TAG, "The crime ID is ${args.crimeId}")
     }
 
     override fun onCreateView(

@@ -1,10 +1,10 @@
 package com.bignerdranch.android.criminalintent
 
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.criminalintent.databinding.ListItemCrimeBinding
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class CrimeHolder(
     private val binding: ListItemCrimeBinding
@@ -12,15 +12,12 @@ class CrimeHolder(
 
     private val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy 'at' hh:mm a")
 
-        fun bind(crime: Crime) {
+        fun bind(crime: Crime, onCrimeClicked: (crimeId: UUID) -> Unit) {
             binding.crimeTitle.text = crime.title
             binding.crimeDate.text = formatter.format(crime.date)
 
             binding.root.setOnClickListener {
-                Toast.makeText(
-                    binding.root.context,
-                    "${crime.title} clicked!",
-                    Toast.LENGTH_SHORT).show()
+                onCrimeClicked(crime.id)
             }
 
             binding.crimeSolved.visibility = if (crime.isSolved) {
