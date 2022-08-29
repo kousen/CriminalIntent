@@ -161,6 +161,10 @@ To access a database in an app on an emulator
 6. .exit to get out of the db client
 7. exit to get out of the shell
 
+Additional GitHub repositories:
+- https://github.com/kousen/MyViewModelDemo
+
+
 
 Project points:
    * One activity (if using fragments), or two or more if not

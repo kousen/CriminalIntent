@@ -1,17 +1,19 @@
 package com.bignerdranch.android.criminalintent
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.bignerdranch.android.criminalintent.databinding.FragmentCrimeDetailBinding
-import java.time.LocalDateTime
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 private const val TAG = "CrimeDetailFragment"
 
@@ -25,22 +27,11 @@ class CrimeDetailFragment : Fragment() {
 
     private val args: CrimeDetailFragmentArgs by navArgs()
 
-    private val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy 'at' hh:mm a")
-
-    lateinit var crime: Crime
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        crime = Crime(
-            id = UUID.randomUUID(),
-            title = "",
-            date = LocalDateTime.now(),
-            isSolved = false
-        )
-
-        Log.d(TAG, "The crime ID is ${args.crimeId}")
+    private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
+        CrimeDetailViewModelFactory(args.crimeId)
     }
+
+    private val formatter = DateTimeFormatter.ofPattern("EEE, MMM dd, yyyy 'at' hh:mm a")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,17 +47,38 @@ class CrimeDetailFragment : Fragment() {
 
         binding.apply {
             crimeTitle.doOnTextChanged { text, _, _, _ ->
-                crime = crime.copy(title = text.toString())
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(title = text.toString())
+                }
             }
 
             crimeDate.apply {
-                text = formatter.format(crime.date)
                 isEnabled = false
             }
 
             crimeSolved.setOnCheckedChangeListener { _, isChecked ->
-                crime = crime.copy(isSolved = isChecked)
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(isSolved = isChecked)
+                }
             }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                crimeDetailViewModel.crime.collect { crime ->
+                    crime?.let { updateUi(it) }
+                }
+            }
+        }
+    }
+
+    private fun updateUi(crime: Crime) {
+        binding.apply {
+            if (crimeTitle.text.toString() != crime.title) {
+                crimeTitle.setText(crime.title)
+            }
+            crimeDate.text = crime.date.toString()
+            crimeSolved.isChecked = crime.isSolved
         }
     }
 
