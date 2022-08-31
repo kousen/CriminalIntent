@@ -2,6 +2,7 @@ package com.bignerdranch.android.criminalintent
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -72,6 +73,12 @@ class CrimeListFragment : Fragment() {
                 return when (menuItem.itemId) {
                     R.id.new_crime -> {
                         showNewCrime()
+                        true
+                    }
+                    R.id.about -> {
+                        Toast.makeText(context,
+                            "Criminal Intent v1.0",
+                            Toast.LENGTH_SHORT).show()
                         true
                     }
                     else -> true
